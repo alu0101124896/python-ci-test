@@ -1,0 +1,26 @@
+name: Run python main file
+
+on: # when this action should be triggered?
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs: # jobs are made of steps
+  build:
+    # Define the OS our workflow should run on
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # To test across multiple operative sistems and language versions
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.9", "pypy3.9", "3.10"]
+
+    steps: # Clone the repo. See https://github.com/actions/checkout
+      - uses: actions/checkout@v3
+      # Example of using an environment variable
+      - name: Use python ${{ matrix.python-version }} # Will be: "Use python 3.9"
+        uses: actions/setup-python@v4 # Install python. See https://github.com/actions/setup-python
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python3 main.py
